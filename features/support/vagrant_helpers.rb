@@ -15,18 +15,16 @@ module VagrantHelpers
   end
 
   def vagrant_cli_command(command)
-    puts "[vagrant] #{command}"
-    stdout, stderr, status = Dir.chdir(VAGRANT_ROOT) do
-      Open3.capture3("#{VAGRANT_BIN} #{command}")
-    end
+    puts "[docker] #{command}"
+    stdout, stderr, status = Open3.capture3("docker exec busy_cohen #{command}")
 
-    (stdout + stderr).each_line { |line| puts "[vagrant] #{line}" }
+    (stdout + stderr).each_line { |line| puts "[docker] #{line}" }
 
     [stdout, stderr, status]
   end
 
   def run_vagrant_command(command)
-    stdout, stderr, status = vagrant_cli_command("ssh -c #{command.inspect}")
+    stdout, stderr, status = vagrant_cli_command(command)
     return [stdout, stderr] if status.success?
     raise VagrantSSHCommandError, status
   end

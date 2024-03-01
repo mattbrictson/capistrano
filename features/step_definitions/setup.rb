@@ -8,7 +8,7 @@ end
 
 Given(/^servers with the roles app and web$/) do
   begin
-    vagrant_cli_command("up")
+    # vagrant_cli_command("up")
   rescue
     nil
   end

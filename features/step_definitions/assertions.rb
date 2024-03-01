@@ -6,7 +6,7 @@ end
 
 Then(/^git wrapper permissions are 0700$/) do
   permissions_test = %Q([ $(stat -c "%a" #{TestApp.git_wrapper_path_glob}) == "700" ])
-  _stdout, _stderr, status = vagrant_cli_command("ssh -c #{permissions_test.shellescape}")
+  _stdout, _stderr, status = vagrant_cli_command(permissions_test.shellescape)
 
   expect(status).to be_success
 end
@@ -21,13 +21,13 @@ end
 
 Then(/^(\d+) valid releases are kept/) do |num|
   test = %Q([ $(ls -g #{TestApp.releases_path} | grep -E '[0-9]{14}' | wc -l) == "#{num}" ])
-  _, _, status = vagrant_cli_command("ssh -c #{test.shellescape}")
+  _, _, status = vagrant_cli_command(test.shellescape)
   expect(status).to be_success
 end
 
 Then(/^the invalid (.+) release is ignored$/) do |filename|
   test = "ls -g #{TestApp.releases_path} | grep #{filename}"
-  _, _, status = vagrant_cli_command("ssh -c #{test.shellescape}")
+  _, _, status = vagrant_cli_command(test.shellescape)
   expect(status).to be_success
 end
 

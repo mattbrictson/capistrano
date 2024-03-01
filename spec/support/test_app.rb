@@ -9,13 +9,15 @@ module TestApp
     install_test_app_with(default_config)
   end
 
+  # TODO: reference private key from well-known location
+  # TODO: probably need to download the key from the git repo
   def default_config
     <<-CONFIG
       set :deploy_to, '#{deploy_to}'
       set :repo_url, 'https://github.com/capistrano/capistrano.git'
       set :branch, 'master'
-      set :ssh_options, { keys: "\#{ENV['HOME']}/.vagrant.d/insecure_private_key", auth_methods: ['publickey'] }
-      server 'vagrant@localhost:2220', roles: %w{web app}
+      set :ssh_options, { keys: '/Users/mbrictson/Code/capistrano/capistrano-docker-for-testing/ssh_keys/ssh_key_ed25519', auth_methods: ['publickey'] }
+      server 'deployer@localhost:2022', roles: %w{web app}
       set :linked_files, #{linked_files}
       set :linked_dirs, #{linked_dirs}
       set :format_options, log_file: nil
@@ -39,10 +41,13 @@ module TestApp
     FileUtils.rm_rf(test_app_path)
     FileUtils.mkdir(test_app_path)
 
-    File.open(gemfile, "w+") do |file|
-      file.write "source 'https://rubygems.org'\n"
-      file.write "gem 'capistrano', path: '#{path_to_cap}'"
-    end
+    File.write(gemfile, <<-GEMFILE.gsub(/^\s+/, ""))
+      source "https://rubygems.org"
+
+      gem "capistrano", path: #{path_to_cap.to_s.inspect}
+      gem "ed25519", ">= 1.2", "< 2.0"
+      gem "bcrypt_pbkdf", ">= 1.0", "< 2.0"
+    GEMFILE
 
     Dir.chdir(test_app_path) do
       run "bundle"
@@ -118,7 +123,7 @@ module TestApp
   end
 
   def deploy_to
-    Pathname.new("/home/vagrant/var/www/deploy")
+    Pathname.new("/home/deployer/var/www/deploy")
   end
 
   def shared_path
