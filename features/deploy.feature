@@ -2,7 +2,6 @@ Feature: Deploy
 
   Background:
     Given a test app with the default configuration
-    And I have SSH connectivity
 
   Scenario: Creating the repo
     When I run cap "git:check"
