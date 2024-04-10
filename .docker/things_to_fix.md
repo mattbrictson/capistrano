@@ -1,1 +1,0 @@
-- Correct permission on the privatekey before SSHing into the box
