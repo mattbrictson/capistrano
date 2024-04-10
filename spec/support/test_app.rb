@@ -9,14 +9,12 @@ module TestApp
     install_test_app_with(default_config)
   end
 
-  # TODO: reference private key from well-known location
-  # TODO: probably need to download the key from the git repo
   def default_config
     <<-CONFIG
       set :deploy_to, '#{deploy_to}'
       set :repo_url, 'https://github.com/capistrano/capistrano.git'
       set :branch, 'master'
-      set :ssh_options, { keys: '/Users/mbrictson/Code/capistrano/capistrano-docker-for-testing/ssh_keys/ssh_key_ed25519', auth_methods: ['publickey'] }
+      set :ssh_options, { keys: '#{File.expand_path("../../.docker/ssh_key_rsa", __dir__)}', auth_methods: ['publickey'] }
       server 'deployer@localhost:2022', roles: %w{web app}
       set :linked_files, #{linked_files}
       set :linked_dirs, #{linked_dirs}
