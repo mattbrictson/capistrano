@@ -17,7 +17,7 @@ chmod 600 /home/deployer/.ssh/authorized_keys
 apt -y update --allow-insecure-repositories
 
 # Install and configure sshd
-apt-get -y install openssh-server
+apt-get -y install openssh-server git
 echo "Port 22" >> /etc/ssh/sshd_config
 echo "PasswordAuthentication no" >> /etc/ssh/sshd_config
 echo "ChallengeResponseAuthentication no" >> /etc/ssh/sshd_config
