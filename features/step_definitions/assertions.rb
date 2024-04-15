@@ -5,6 +5,10 @@ Then(/^references in the remote repo are listed$/) do
 end
 
 Then(/^git wrapper permissions are 0700$/) do
+  # modified this command because the glob can return n files -- I believe the intent is that only one file would be
+  # returned, and the glob was used to handle non-determinism. Using docker compose down still seems to keep a cached
+  # volume, so these files could still persist between runs (unless we find a way to definitely flush the files between runs)
+  # So instead this command is modified to pluck the "latest" file
   permissions_test = %Q([[ $(stat -c "%a" $(ls -tr #{TestApp.git_wrapper_path_glob} | tail -n 1)) == "700" ]])
   _stdout, _stderr, status = vagrant_cli_command(permissions_test.shellescape)
 

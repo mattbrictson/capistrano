@@ -16,6 +16,9 @@ module VagrantHelpers
 
   def vagrant_cli_command(command)
     puts "[docker] #{command}"
+    # updated to explicitly use bash. I don't know if vagrant was giving us a bash session before, but
+    # I was having trouble getting inline evaluations to work without using bash. But if we can modify the evalulation
+    # commands to work without bash, then we don't need to use it here
     stdout, stderr, status = Open3.capture3("docker compose exec ssh_server /bin/bash -c #{command}")
 
     (stdout + stderr).each_line { |line| puts "[docker] #{line}" }
