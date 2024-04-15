@@ -5,7 +5,7 @@ Then(/^references in the remote repo are listed$/) do
 end
 
 Then(/^git wrapper permissions are 0700$/) do
-  permissions_test = %Q([ $(stat -c "%a" #{TestApp.git_wrapper_path_glob}) == "700" ])
+  permissions_test = %Q([[ $(stat -c "%a" $(ls -tr #{TestApp.git_wrapper_path_glob} | tail -n 1)) == "700" ]])
   _stdout, _stderr, status = vagrant_cli_command(permissions_test.shellescape)
 
   expect(status).to be_success

@@ -16,7 +16,7 @@ module VagrantHelpers
 
   def vagrant_cli_command(command)
     puts "[docker] #{command}"
-    stdout, stderr, status = Open3.capture3("docker compose exec ssh_server #{command}")
+    stdout, stderr, status = Open3.capture3("docker compose exec ssh_server /bin/bash -c #{command}")
 
     (stdout + stderr).each_line { |line| puts "[docker] #{line}" }
 

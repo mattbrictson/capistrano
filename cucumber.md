@@ -9,7 +9,7 @@ Dependencies:
 chmod 0600 ssh_key_rsa
 
 # Run the SSHD in a Docker container, detached
-docker-compose up -d
+docker compose up -d
 
 # Run a test. One that definitely works is below
 bundle exec cucumber features/sshconnect.feature
