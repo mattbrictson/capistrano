@@ -12,7 +12,7 @@ module RemoteCommandHelpers
   end
 
   def exists?(type, path)
-    %Q{[ -#{type} "#{path}" ]}
+    %Q{[[ -#{type} "#{path}" ]]}
   end
 
   def symlinked?(symlink_path, target_path)
