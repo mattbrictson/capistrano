@@ -25,13 +25,13 @@ end
 
 Then(/^(\d+) valid releases are kept/) do |num|
   test = %Q([ $(ls -g #{TestApp.releases_path} | grep -E '[0-9]{14}' | wc -l) == "#{num}" ])
-  _, _, status = vagrant_cli_command(test.shellescape)
+  _, _, status = vagrant_cli_command(test)
   expect(status).to be_success
 end
 
 Then(/^the invalid (.+) release is ignored$/) do |filename|
   test = "ls -g #{TestApp.releases_path} | grep #{filename}"
-  _, _, status = vagrant_cli_command(test.shellescape)
+  _, _, status = vagrant_cli_command(test)
   expect(status).to be_success
 end
 
