@@ -9,6 +9,8 @@ Then(/^git wrapper permissions are 0700$/) do
   # returned, and the glob was used to handle non-determinism. Using docker compose down still seems to keep a cached
   # volume, so these files could still persist between runs (unless we find a way to definitely flush the files between runs)
   # So instead this command is modified to pluck the "latest" file
+  # [Update] Since we expect the test runner to "down" the container, we should expect a clean filesystem here, so
+  # maybe this is no longer necessary and could be reverted
   permissions_test = %Q([[ $(stat -c "%a" $(ls -tr #{TestApp.git_wrapper_path_glob} | tail -n 1)) == "700" ]])
   expect { run_remote_ssh_command(permissions_test) }.not_to raise_error
 end
@@ -24,7 +26,7 @@ end
 Then(/^(\d+) valid releases are kept/) do |num|
   test = %Q([ $(ls -g #{TestApp.releases_path} | grep -E '[0-9]{14}' | wc -l) == "#{num}" ])
   expect { run_remote_ssh_command(test) }.not_to raise_error
-  # This used to use a different API method for interacting with Docker. I thought it would make refactoring simpler
+  # This used to use a different API method for interacting with Vagrant. I thought it would make refactoring simpler
   # to make this use the same method as everything else in the Cucumber suite.
   # The most obvious tradeoff here is that we now test for "not an error" (no Ruby exception) vs. "success" (exit 0)
   # So it's possible we'd encounter a false positive if there was some problem with run_remote_ssh_command
