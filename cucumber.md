@@ -19,7 +19,7 @@ Things that need to be fixed still for this to be portable/shippable:
 
 - (done) Fix remaining specs
 - (done) Bootstrap `docker-compose up` to the test runner (and maybe teardown?)
-- Lots of emitted messages from deploy test - is this intended?
+- (done) Lots of emitted messages from deploy test - is this intended? -- The answer seems to be yes
 - Rename/refactor helpers that are Vagrant-specific (maybe outcome should be... don't call them Docker either)
 - Automate permission on the privatekey as part of test runs (0644 to 0600)
 - Github actions should be able to do this OK (may require shipping an image to their container registry)
@@ -29,3 +29,4 @@ Things that need to be fixed still for this to be portable/shippable:
   - This can be done by stopping the container, running `docker compose rm`, and starting the container. But doesn't that defeat the purpose of faster test runs?
   - We could manually remove key folders in the filesystem, but this requires more knowledge of the test behaviors than we have today
 - Should exceptions bubble to STDOUT of test runner?
+- Block test run on docker container definitely accepting SSH connections?
