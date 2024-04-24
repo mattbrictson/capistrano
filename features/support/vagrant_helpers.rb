@@ -7,10 +7,7 @@ module VagrantHelpers
 
   at_exit do
     if ENV["KEEP_RUNNING"]
-      puts "Vagrant vm will be left up because KEEP_RUNNING is set."
-      puts "Rerun without KEEP_RUNNING set to cleanup the vm."
-    else
-      vagrant_cli_command("destroy -f")
+      puts "KEEP_RUNNING is no longer supported"
     end
   end
 

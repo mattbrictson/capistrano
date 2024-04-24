@@ -46,9 +46,6 @@ $ bundle exec rake spec
 
 # Run the Cucumber suite
 $ bundle exec rake features
-
-# Run the Cucumber suite and leave the VM running (faster for subsequent runs)
-$ bundle exec rake features KEEP_RUNNING=1
 ```
 
 ## Coding guidelines
