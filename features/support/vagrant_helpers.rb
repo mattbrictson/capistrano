@@ -9,6 +9,32 @@ module VagrantHelpers
     if ENV["KEEP_RUNNING"]
       puts "KEEP_RUNNING is no longer supported"
     end
+
+    vagrant_down
+  end
+
+  def vagrant_down
+    puts "[docker] compose down"
+    # updated to explicitly use bash. I don't know if vagrant was giving us a bash session before, but
+    # I was having trouble getting inline evaluations to work without using bash. But if we can modify the evalulation
+    # commands to work without bash, then we don't need to use it here
+    stdout, stderr, status = Open3.capture3("docker compose down")
+
+    (stdout + stderr).each_line { |line| puts "[docker] #{line}" }
+
+    [stdout, stderr, status]
+  end
+
+  def vagrant_up
+    puts "[docker] compose up"
+    # updated to explicitly use bash. I don't know if vagrant was giving us a bash session before, but
+    # I was having trouble getting inline evaluations to work without using bash. But if we can modify the evalulation
+    # commands to work without bash, then we don't need to use it here
+    stdout, stderr, status = Open3.capture3("docker compose up -d")
+
+    (stdout + stderr).each_line { |line| puts "[docker] #{line}" }
+
+    [stdout, stderr, status]
   end
 
   def vagrant_cli_command(command)

@@ -2,6 +2,7 @@ Feature: Deploy
 
   Background:
     Given a test app with the default configuration
+    And servers with the roles app and web
 
   Scenario: Creating the repo
     When I run cap "git:check"
