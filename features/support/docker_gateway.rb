@@ -8,9 +8,7 @@ at_exit do
   # supported as elegantly as before
   # Another way we could do this is to remove parts of the filesystem that the tests create, which would add some
   # complexity here.
-  if ENV["KEEP_RUNNING"]
-    puts "KEEP_RUNNING is no longer supported"
-  end
+  puts "KEEP_RUNNING is no longer supported" if ENV["KEEP_RUNNING"]
 
   DockerGateway.new.stop
 end

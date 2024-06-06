@@ -14,7 +14,7 @@ module TestApp
       set :deploy_to, '#{deploy_to}'
       set :repo_url, 'https://github.com/capistrano/capistrano.git'
       set :branch, 'master'
-      set :ssh_options, { keys: '#{File.expand_path("../../.docker/ssh_key_rsa", __dir__)}', auth_methods: ['publickey'] }
+      set :ssh_options, { keys: '#{File.expand_path('../../.docker/ssh_key_rsa', __dir__)}', auth_methods: ['publickey'] }
       server 'deployer@localhost:2022', roles: %w{web app}
       set :linked_files, #{linked_files}
       set :linked_dirs, #{linked_dirs}
