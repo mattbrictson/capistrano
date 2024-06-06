@@ -1,4 +1,5 @@
 require "open3"
+require "socket"
 require_relative "docker_gateway"
 
 module RemoteSSHHelpers
@@ -8,6 +9,14 @@ module RemoteSSHHelpers
 
   def start_ssh_server
     docker_gateway.start
+  end
+
+  def wait_for_ssh_server(retries=3)
+    TCPSocket.new("localhost", 2022).close
+  rescue Errno::ECONNREFUSED
+    retries -= 1
+    sleep(2) && retry if retries.positive?
+    raise
   end
 
   def run_remote_ssh_command(command)

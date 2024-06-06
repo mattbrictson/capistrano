@@ -7,11 +7,8 @@ Given(/^a test app without any configuration$/) do
 end
 
 Given(/^servers with the roles app and web$/) do
-  begin
-    start_ssh_server
-  rescue
-    nil
-  end
+  start_ssh_server
+  wait_for_ssh_server
 end
 
 Given(/^a linked file "(.*?)"$/) do |file|
