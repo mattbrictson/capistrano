@@ -12,8 +12,8 @@ module RemoteSSHHelpers
   end
 
   def wait_for_ssh_server(retries=3)
-    TCPSocket.new("localhost", 2022).close
-  rescue Errno::ECONNREFUSED
+    Socket.tcp("localhost", 2022, connect_timeout: 1).close
+  rescue Errno::ECONNREFUSED, Errno::ETIMEDOUT
     retries -= 1
     sleep(2) && retry if retries.positive?
     raise
