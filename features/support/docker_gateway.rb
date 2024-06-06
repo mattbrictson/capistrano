@@ -1,9 +1,31 @@
-module DockerGateway
-  def start_gateway
+# Ensure Docker container is completely stopped when Ruby exits.
+at_exit do
+  # We made available KEEP_RUNNING to allow the same vagrant environment to run between test runs
+  # For it to work, we'd drop some files (presumably the equivalent to a temporary volume) between test runs
+  # to avoid test pollution
+  # An equivalent for Docker would be to stop the container and run `docker compose rm`
+  # But since that requires a stop and start of the container, we'd lose time savings, so I'm not sure this can be
+  # supported as elegantly as before
+  # Another way we could do this is to remove parts of the filesystem that the tests create, which would add some
+  # complexity here.
+  if ENV["KEEP_RUNNING"]
+    puts "KEEP_RUNNING is no longer supported"
+  end
+
+  DockerGateway.new.stop
+end
+
+# Manages the Docker-based SSH server that is declared in docker-compose.yml.
+class DockerGateway
+  def initialize(log_proc=$stderr.method(:puts))
+    @log_proc = log_proc
+  end
+
+  def start
     run_compose_command("up -d")
   end
 
-  def stop_gateway
+  def stop
     run_compose_command("down")
   end
 
@@ -11,28 +33,21 @@ module DockerGateway
     run_compose_command("exec ssh_server /bin/bash -c #{command.shellescape}")
   end
 
-  # Extracted a DockerGateway to create a stronger distinction between "public" and "private" API methods
-  # Since these are all just instance methods on a module, there isn't a Ruby privacy scope
-  # Hopefully "run_compose_command" is a good enough clue that this isn't meant to be bled outside of this file
+  private
+
   def run_compose_command(command)
-    puts "[docker compose] #{command}"
+    log "[docker compose] #{command}"
     # updated to explicitly use bash. I don't know if vagrant was giving us a bash session before, but
-    # I was having trouble getting inline evaluations to work without using bash. But if we can modify the evalulation
+    # I was having trouble getting inline evaluations to work without using bash. But if we can modify the evaluation
     # commands to work without bash, then we don't need to use it here
     stdout, stderr, status = Open3.capture3("docker compose #{command}")
 
-    (stdout + stderr).each_line { |line| puts "[docker compose] #{line}" }
+    (stdout + stderr).each_line { |line| log "[docker compose] #{line}" }
 
     [stdout, stderr, status]
   end
 
-  # The reason DockerGateway is exposed as a module is because of this puts
-  # This gives us nice formatting of remote container commands within the cucumber test context
-  # This seemed like the simplest way to keep track of the Cucumber runner context while introducing minimal change
-  # But maybe there's a better way?
-  def puts(message)
-    # Attach log messages to the current cucumber feature (`log`),
-    # or simply puts to the console (`super`) if we are outside of cucumber.
-    respond_to?(:log) ? log(message) : super(message)
+  def log(message)
+    @log_proc.call(message)
   end
 end
