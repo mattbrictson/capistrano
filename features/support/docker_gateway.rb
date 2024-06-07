@@ -25,9 +25,6 @@ class DockerGateway
 
   def run_compose_command(command)
     log "[docker compose] #{command}"
-    # updated to explicitly use bash. I don't know if vagrant was giving us a bash session before, but
-    # I was having trouble getting inline evaluations to work without using bash. But if we can modify the evaluation
-    # commands to work without bash, then we don't need to use it here
     stdout, stderr, status = Open3.capture3("docker compose #{command}")
 
     (stdout + stderr).each_line { |line| log "[docker compose] #{line}" }
