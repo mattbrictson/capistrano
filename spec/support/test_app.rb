@@ -1,6 +1,7 @@
 require "English"
 require "fileutils"
 require "pathname"
+require "open3"
 
 module TestApp
   extend self
@@ -99,13 +100,12 @@ module TestApp
   end
 
   def run(command, subdirectory=nil)
-    output = nil
     command = "bundle exec #{command}" unless command =~ /^bundle\b/
     dir = subdirectory ? test_app_path.join(subdirectory) : test_app_path
-    Dir.chdir(dir) do
-      output = with_clean_bundler_env { `#{command}` }
+    output, status = Dir.chdir(dir) do
+      with_clean_bundler_env { Open3.capture2e(command) }
     end
-    [$CHILD_STATUS.success?, output]
+    [status.success?, output]
   end
 
   def stage

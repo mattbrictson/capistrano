@@ -25,5 +25,5 @@ Things that need to be fixed still for this to be portable/shippable:
 - (done) Drop leftover vagrant references/artifacts
 - (done) Github actions should be able to do this OK (may require shipping an image to their container registry)
 - (done) Block test run on docker container definitely accepting SSH connections?
+- (done) Should exceptions bubble to STDOUT of test runner?
 - Split out Dockerfile to its own repo so that it has its own deployment/building workflow in GA
-- Should exceptions bubble to STDOUT of test runner?
