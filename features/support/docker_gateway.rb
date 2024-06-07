@@ -1,15 +1,5 @@
 # Ensure Docker container is completely stopped when Ruby exits.
 at_exit do
-  # We made available KEEP_RUNNING to allow the same vagrant environment to run between test runs
-  # For it to work, we'd drop some files (presumably the equivalent to a temporary volume) between test runs
-  # to avoid test pollution
-  # An equivalent for Docker would be to stop the container and run `docker compose rm`
-  # But since that requires a stop and start of the container, we'd lose time savings, so I'm not sure this can be
-  # supported as elegantly as before
-  # Another way we could do this is to remove parts of the filesystem that the tests create, which would add some
-  # complexity here.
-  puts "KEEP_RUNNING is no longer supported" if ENV["KEEP_RUNNING"]
-
   DockerGateway.new.stop
 end
 
