@@ -20,12 +20,6 @@ end
 Then(/^(\d+) valid releases are kept/) do |num|
   test = %Q([ $(ls -g #{TestApp.releases_path} | grep -E '[0-9]{14}' | wc -l) == "#{num}" ])
   expect { run_remote_ssh_command(test) }.not_to raise_error
-  # This used to use a different API method for interacting with Vagrant. I thought it would make refactoring simpler
-  # to make this use the same method as everything else in the Cucumber suite.
-  # The most obvious tradeoff here is that we now test for "not an error" (no Ruby exception) vs. "success" (exit 0)
-  # So it's possible we'd encounter a false positive if there was some problem with run_remote_ssh_command
-  # If we feel strongly about keeping this as an explicit success check, we could expose a new API method which works
-  # like the old one
 end
 
 Then(/^the invalid (.+) release is ignored$/) do |filename|
